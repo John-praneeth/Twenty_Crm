@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════════
+  RAILWAY DASHBOARD CHANGES - QUICK REFERENCE
+  Switch from Docker Image to Repository Build
+═══════════════════════════════════════════════════════════════
+
+🔗 PROJECT URL:
+https://railway.com/project/cda9fd62-f906-45fd-9c42-73561a5f319c
+
+───────────────────────────────────────────────────────────────
+  STEP 1: Navigate to Main Server Service
+───────────────────────────────────────────────────────────────
+
+Click on "Twenty" or "Server" service (NOT the worker)
+Then click "Settings" tab
+
+───────────────────────────────────────────────────────────────
+  STEP 2: Change Source (Settings → Source)
+───────────────────────────────────────────────────────────────
+
+CHANGE FROM:
+  Source: Docker Image
+  Image: twentycrm/twenty:latest
+
+CHANGE TO:
+  Source: GitHub Repository
+  Repository: [Select your Twenty CRM repo]
+  Branch: main
+  Root Directory: (leave empty)
+
+───────────────────────────────────────────────────────────────
+  STEP 3: Configure Build (Settings → Build)
+───────────────────────────────────────────────────────────────
+
+Builder: DOCKERFILE
+
+Dockerfile Path:
+packages/twenty-docker/twenty/Dockerfile
+
+───────────────────────────────────────────────────────────────
+  STEP 4: Configure Deploy (Settings → Deploy)
+───────────────────────────────────────────────────────────────
+
+Start Command: (LEAVE EMPTY - CRITICAL!)
+
+Health Check Path: /healthz
+Health Check Timeout: 100
+
+Restart Policy: On Failure
+Max Retries: 10
+
+───────────────────────────────────────────────────────────────
+  STEP 5: Deploy
+───────────────────────────────────────────────────────────────
+
+1. Click "Deployments" tab
+2. Click "New Deployment"
+3. Wait 10-15 minutes for build + deploy
+4. Monitor logs for success messages
+
+───────────────────────────────────────────────────────────────
+  SUCCESS INDICATORS IN LOGS
+───────────────────────────────────────────────────────────────
+
+✅ "Successfully migrated DB!"
+✅ "Successfully registered all background sync jobs!"
+✅ "Application is running on: http://[::]:3000"
+✅ Health check passing (green status)
+
+───────────────────────────────────────────────────────────────
+  ⚠️  CRITICAL REMINDER
+───────────────────────────────────────────────────────────────
+
+DO NOT SET A START COMMAND!
+
+❌ WRONG: node dist/src/main
+❌ WRONG: yarn start:prod
+✅ RIGHT: (empty/blank)
+
+The Dockerfile entrypoint handles everything automatically!
+
+───────────────────────────────────────────────────────────────
+  WORKER SERVICE
+───────────────────────────────────────────────────────────────
+
+✅ Worker is already configured correctly
+✅ No changes needed for worker
+✅ Worker service ID: 1b704fbb-440a-4aaa-b81a-3c871db81617
+
+═══════════════════════════════════════════════════════════════
+
+Need detailed help? See: SWITCH_TO_REPO_BUILD.md
