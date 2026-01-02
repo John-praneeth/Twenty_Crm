@@ -35,7 +35,23 @@ register_background_jobs() {
     fi
 }
 
+sync_workspace_metadata() {
+    if [ "${DISABLE_WORKSPACE_METADATA_SYNC}" = "true" ]; then
+        echo "Workspace metadata sync is disabled, skipping..."
+        return
+    fi
+
+    echo "Syncing workspace metadata to Redis cache..."
+    if yarn command:prod workspace:sync-metadata; then
+        echo "Successfully synced workspace metadata!"
+    else
+        echo "Warning: Failed to sync workspace metadata, but continuing startup..."
+        echo "Users may experience login issues until metadata is synced."
+    fi
+}
+
 setup_and_migrate_db
+sync_workspace_metadata
 register_background_jobs
 
 # Continue with the original Docker command
